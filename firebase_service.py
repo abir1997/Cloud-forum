@@ -15,11 +15,9 @@ user_ref = db.collection('users')
 def get_user(user_id):
     if user_id:
         user = user_ref.document(user_id).get()
-        return jsonify(user.to_dict()), 200
+        return user.to_dict()
 
 
 def get_all_users():
     all_users = [doc.to_dict() for doc in user_ref.stream()]
-    if all_users:
-        return jsonify(all_users), 200
-
+    return all_users
