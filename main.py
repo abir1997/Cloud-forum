@@ -18,15 +18,14 @@ def login():
         if request.form['userId'] and request.form['password']:
             user_id = request.form['userId']
             pwd = request.form['password']
-            users = fbs.get_all_users()
-            print(users)
+
             if is_valid_login(user_id, pwd):
                 print("Authorization successful, routing to forum..")
             else:
                 print("Authorization unsuccessful.")
-                error = "Invalid credentials"
+                error = "ID or password is invalid"
 
-    return render_template('login.html', error=error)
+    return render_template('login.html', message=error)
 
 
 def is_valid_login(user_id, password):
@@ -35,6 +34,45 @@ def is_valid_login(user_id, password):
         if user['id'] == user_id and user['password'] == password:
             return True
     return False
+
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    error = None
+    if request.method == 'POST':
+        user_id = request.form['userId']
+        pwd = request.form['password']
+        username = request.form['userName']
+        users = fbs.get_all_users()
+        if id_exists(users, user_id):
+            error = "The ID already exists."
+        elif username_exists(users, username):
+            error = "The username already exists"
+        else:
+            print("Registration successful. Creating record in firestore.")
+            fbs.create_user(user_id, username, pwd)
+    return render_template('register.html', message=error)
+
+
+def is_valid_registration(user_id, username):
+    users = fbs.get_all_users()
+    for user in users:
+        if user['id'] == user_id or user['user_name'] == username:
+            return False
+    return True
+
+
+def id_exists(users, user_id):
+    for user in users:
+        if user['id'] == user_id:
+            return True
+    return False
+
+
+def username_exists(users, username):
+    for user in users:
+        if user['user_name'] == username:
+            return False
 
 
 if __name__ == '__main__':

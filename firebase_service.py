@@ -2,7 +2,9 @@ from flask import Flask, request, jsonify
 from firebase_admin import credentials, firestore, initialize_app
 
 '''
-Relevant doc : https://cloud.google.com/community/tutorials/building-flask-api-with-cloud-firestore-and-deploying-to-cloud-run
+Relevant docs : 
+https://cloud.google.com/community/tutorials/building-flask-api-with-cloud-firestore-and-deploying-to-cloud-run
+https://firebase.google.com/docs/firestore/manage-data/add-data#python
 '''
 
 # Initialize Firestore DB
@@ -21,3 +23,12 @@ def get_user(user_id):
 def get_all_users():
     all_users = [doc.to_dict() for doc in user_ref.stream()]
     return all_users
+
+
+def create_user(user_id, username, password):
+    user = {
+        'id': user_id,
+        'password': password,
+        'user_name': username
+    }
+    user_ref.document(user_id).set(user)
