@@ -32,3 +32,7 @@ def create_user(user_id, username, password):
         'user_name': username
     }
     user_ref.document(user_id).set(user)
+
+
+def create_post(subject, message):
+    pass

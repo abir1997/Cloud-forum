@@ -21,6 +21,7 @@ def login():
             user = fbs.get_user(user_id)
             if is_valid_login(user_id, pwd):
                 print("Authorization successful, routing to forum..")
+                # cookie docs : https://pythonbasics.org/flask-cookies/
                 resp = make_response(redirect("/forum"))
                 resp.set_cookie('logged_in_user', user_id)
                 resp.set_cookie('username', user['user_name'])
