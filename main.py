@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, flash, jsonify, url_for
 import json
 from werkzeug.utils import redirect
-
 import firebase_service as fbs
+import gcs_service as gcs_s
 app = Flask(__name__)
 
 
@@ -51,6 +51,11 @@ def register():
         else:
             print("Registration successful. Creating record in firestore.")
             fbs.create_user(user_id, username, pwd)
+            if request.files['img']:
+                file = request.files['img']
+                print(file)
+                gcs_s.upload(file, user_id)
+
     return render_template('register.html', message=error)
 
 
