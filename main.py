@@ -23,6 +23,7 @@ def login():
                 print("Authorization successful, routing to forum..")
                 resp = make_response(redirect("/forum"))
                 resp.set_cookie('logged_in_user', user_id)
+                resp.set_cookie('username', user['user_name'])
                 return resp
             else:
                 print("Authorization unsuccessful.")
@@ -83,9 +84,9 @@ def username_exists(users, username):
             return False
 
 
-@app.route("/forum", methods=['GET', 'POST'])
+@app.route("/forum", methods=["GET", "POST"])
 def forum():
-    return render_template("forum.html")
+    return render_template("forum.html", username=request.cookies.get("username"))
 
 @app.route("/logout")
 def logout():
