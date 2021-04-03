@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, jsonify, url_for
+from flask import Flask, render_template, request, make_response, flash, jsonify, url_for
 import json
 from werkzeug.utils import redirect
 import firebase_service as fbs
@@ -18,9 +18,12 @@ def login():
         if request.form['userId'] and request.form['password']:
             user_id = request.form['userId']
             pwd = request.form['password']
-
+            user = fbs.get_user(user_id)
             if is_valid_login(user_id, pwd):
                 print("Authorization successful, routing to forum..")
+                resp = make_response(redirect("/forum"))
+                resp.set_cookie('logged_in_user', user_id)
+                return resp
             else:
                 print("Authorization unsuccessful.")
                 error = "ID or password is invalid"
@@ -30,6 +33,7 @@ def login():
 
 def is_valid_login(user_id, password):
     users = fbs.get_all_users()
+    #user = fbs.get_user(user_id)
     for user in users:
         if user['id'] == user_id and user['password'] == password:
             return True
@@ -53,7 +57,6 @@ def register():
             fbs.create_user(user_id, username, pwd)
             if request.files['img']:
                 file = request.files['img']
-                print(file)
                 gcs_s.upload(file, user_id)
 
     return render_template('register.html', message=error)
@@ -79,6 +82,10 @@ def username_exists(users, username):
         if user['user_name'] == username:
             return False
 
+
+@app.route("/forum", methods=['GET', 'POST'])
+def forum():
+    return render_template("forum.html")
 
 @app.route("/logout")
 def logout():
