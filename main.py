@@ -24,6 +24,8 @@ def login():
                 resp = make_response(redirect("/forum"))
                 resp.set_cookie('logged_in_user', user_id)
                 resp.set_cookie('username', user['user_name'])
+                img_link = gcs_s.get_img_link(user_id)
+                resp.set_cookie('img_link', img_link)
                 return resp
             else:
                 print("Authorization unsuccessful.")
@@ -86,7 +88,9 @@ def username_exists(users, username):
 
 @app.route("/forum", methods=["GET", "POST"])
 def forum():
-    return render_template("forum.html", username=request.cookies.get("username"))
+    return render_template("forum.html", username=request.cookies.get("username"),
+                           img_link=request.cookies.get("img_link"))
+
 
 @app.route("/logout")
 def logout():

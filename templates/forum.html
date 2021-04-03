@@ -3,9 +3,9 @@
 <div class="container">
     <h2>User Area</h2>
     <h3>Hi {{ username }}</h3>
-    {% if user_img %}
-        <img src=user_img>
+    {% if img_link %}
+        <img src={{ img_link }} style="width:200px">
     {% endif %}
-    <img src="https://storage.googleapis.com/flaskforum_bucket/2.png">
+
 </div>
 {% endblock %}
