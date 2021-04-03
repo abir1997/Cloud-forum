@@ -18,7 +18,13 @@ def upload(file, user_id):
     bucket = client.get_bucket(bucket_name)
     blob = bucket.blob(user_id + ".png")
     blob.upload_from_file(file)
+    blob.make_public()
+    print(blob.public_url)
 
 
 def download(user_id):
+    pass
+
+
+def get_img_link(user_id):
     pass
