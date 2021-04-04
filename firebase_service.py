@@ -30,6 +30,11 @@ def get_all_posts():
     return [doc.to_dict() for doc in post_ref.stream()]
 
 
+def get_all_posts_by_user(user_id):
+    query = post_ref.where('user_id', '==', user_id)
+    return [doc.to_dict() for doc in query.stream()]
+
+
 def get_posts_by_date(limit):
     """
     Sort posts in descending order of date to get posts.
@@ -50,14 +55,16 @@ def create_user(user_id, username, password):
     user_ref.document(user_id).set(user)
 
 
-def create_post(user_id, subject, message, dt):
+def create_post(user_id, subject, message, dt, img_link):
     # https://www.programiz.com/python-programming/datetime/current-datetime
     dt_str = dt.strftime("%d/%m/%Y %H:%M:%S")
     print(dt_str)
     post = {
+        'user_id': user_id,
         'subject': subject,
         'message': message,
-        'datetime': dt_str
+        'datetime': dt_str,
+        'img_link': img_link
     }
 
     # one user can only submit one post at a given time

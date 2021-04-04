@@ -89,7 +89,6 @@ def username_exists(users, username):
 
 @app.route("/forum", methods=["GET", "POST"])
 def forum():
-    recent_posts = []
     if request.method == 'POST':
         if request.form['subject'] is None:
             return render_template("forum.html", username=request.cookies.get("username"),
@@ -97,22 +96,34 @@ def forum():
         subject = request.form['subject']
         msg = request.form['message']
         msg_img = request.files['msg_img']
-        print("Post successful. Creating entry in firestore and upload img in gcs")
         dt = datetime.now()
         user_id = request.cookies.get("logged_in_user")
-        fbs.create_post(user_id, subject, msg, dt)
+        img_link = ""
         if msg_img:
             img_file_name = user_id + dt.isoformat()
             gcs_s.upload(msg_img, img_file_name)
+            img_link = gcs_s.get_img_link(img_file_name)
+
+        fbs.create_post(user_id, subject, msg, dt, img_link)
+
     recent_posts = fbs.get_posts_by_date(10)
-    print(recent_posts)
     return render_template("forum.html", username=request.cookies.get("username"),
                            img_link=request.cookies.get("img_link"), posts=recent_posts)
 
 
+@app.route("/userpage", methods=["GET", "POST"])
+def user_page():
+    user_posts = fbs.get_all_posts_by_user(request.cookies.get("logged_in_user"))
+    return render_template("userpage.html", posts=user_posts)
+
+
 @app.route("/logout")
 def logout():
-    pass
+    resp = make_response(redirect("/login"))
+    resp.set_cookie('logged_in_user', '', expires=0)
+    resp.set_cookie('username', '', expires=0)
+    resp.set_cookie('img_link', '', expires=0)
+    return resp
 
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container">
     <h3>User Area</h3>
-    <h3>Hi {{ username }}</h3>
+    <h3>Hi <a link href="#">{{ username }}</a></h3>
     {% if img_link %}
     <img src={{ img_link }} style="width:120px; height:120px">
     {% endif %}
@@ -31,18 +31,16 @@
 
 <div class="container">
     <h3>See Messages</h3>
-    {% if posts %}
     {% for post in posts %}
     <div class="card">
         <h5 class="card-header">{{ username }}</h5>
         <div class="card-body">
-            <h5 class="card-title">{{ post }}</h5>
+            <h5 class="card-title">{{ post['subject'] }}</h5>
             <p class="card-text">{{ post['message'] }}</p>
+            <img src={{ post['img_link'] }} style="width:120px; height:120px">
 
-            <a href="#" class="btn btn-primary">Go somewhere</a>
         </div>
     </div>
     {% endfor %}
-    {% endif %}
 </div>
 {% endblock %}

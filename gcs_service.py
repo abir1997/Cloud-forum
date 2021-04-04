@@ -26,5 +26,10 @@ def download(user_id):
 
 
 def get_img_link(file_name):
+    """
+    Gets the public url for file
+    :param file_name: Name of the file
+    :return: url string
+    """
     blob = bucket.get_blob(file_name + ".png")
     return blob.public_url

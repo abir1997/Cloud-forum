@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container">
+    <form method="POST">
+        <div class="form-group">
+            <label for="old_password">Enter Old Password</label>
+            <input
+                    type="password"
+                    class="form-control"
+                    id="old_password"
+                    name="old_password"
+                    placeholder="Enter old password"
+            />
+            <br>
+            <label for="new_password">Enter New Password</label>
+            <input
+                    type="password"
+                    class="form-control"
+                    id="new_password"
+                    name="new_password"
+                    placeholder="Enter new password"
+            />
+            <button type="submit" value="Change" class="btn btn-primary">Change</button>
+        </div>
+    </form>
+</div>
+<br>
+<div class="container">
+    {% for post in posts %}
+    <div class="card">
+        <h5 class="card-header">{{ post }}</h5>
+        <div class="card-body">
+            <h5 class="card-title">{{ post['subject'] }}</h5>
+            <p class="card-text">{{ post['message'] }}</p>
+            <p><img src={{ post['img_link'] }} style="width:120px; height:120px"></p>
+            <button type="button" class="btn btn-primary">Edit</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
