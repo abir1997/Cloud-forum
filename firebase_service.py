@@ -26,6 +26,21 @@ def get_all_users():
     return all_users
 
 
+def get_all_posts():
+    return [doc.to_dict() for doc in post_ref.stream()]
+
+
+def get_posts_by_date(limit):
+    """
+    Sort posts in descending order of date to get posts.
+    https://firebase.google.com/docs/firestore/query-data/order-limit-data
+    :param limit: number of posts
+    :return: list of posts
+    """
+    query = post_ref.order_by('datetime', direction=firestore.Query.DESCENDING).limit(limit)
+    return [doc.to_dict() for doc in query.stream()]
+
+
 def create_user(user_id, username, password):
     user = {
         'id': user_id,
@@ -46,7 +61,7 @@ def create_post(user_id, subject, message, dt):
     }
 
     # one user can only submit one post at a given time
-    # using isoformat as firestore keys cannot contain '/'
+    # using isoformat as firestore keys cannot contain '/' : https://firebase.google.com/docs/firestore/quotas#collections_documents_and_fields
     post_id = user_id + dt.isoformat()
     print(post_id)
     post_ref.document(post_id).set(post)

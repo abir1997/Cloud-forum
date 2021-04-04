@@ -89,6 +89,7 @@ def username_exists(users, username):
 
 @app.route("/forum", methods=["GET", "POST"])
 def forum():
+    recent_posts = []
     if request.method == 'POST':
         if request.form['subject'] is None:
             return render_template("forum.html", username=request.cookies.get("username"),
@@ -100,10 +101,13 @@ def forum():
         dt = datetime.now()
         user_id = request.cookies.get("logged_in_user")
         fbs.create_post(user_id, subject, msg, dt)
-        img_file_name = user_id + dt.isoformat()
-        gcs_s.upload(msg_img, img_file_name)
+        if msg_img:
+            img_file_name = user_id + dt.isoformat()
+            gcs_s.upload(msg_img, img_file_name)
+    recent_posts = fbs.get_posts_by_date(10)
+    print(recent_posts)
     return render_template("forum.html", username=request.cookies.get("username"),
-                           img_link=request.cookies.get("img_link"))
+                           img_link=request.cookies.get("img_link"), posts=recent_posts)
 
 
 @app.route("/logout")

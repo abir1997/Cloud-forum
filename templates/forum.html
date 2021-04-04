@@ -28,4 +28,21 @@
     <p>{{ err }}</p>
     {% endif %}
 </div>
+
+<div class="container">
+    <h3>See Messages</h3>
+    {% if posts %}
+    {% for post in posts %}
+    <div class="card">
+        <h5 class="card-header">{{ username }}</h5>
+        <div class="card-body">
+            <h5 class="card-title">{{ post }}</h5>
+            <p class="card-text">{{ post['message'] }}</p>
+
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</div>
 {% endblock %}
