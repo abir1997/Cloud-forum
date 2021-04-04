@@ -10,7 +10,7 @@
 <br>
 <div class="container">
     <h3>Message posting</h3>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <input class="form-control" type="text" id="subject" name="subject" placeholder="Subject">
         </div>
@@ -22,6 +22,10 @@
             <label for="msg_img">Upload picture</label>
             <input type="file" name="msg_img" id="msg_img">
         </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    {% if err %}
+    <p>{{ err }}</p>
+    {% endif %}
 </div>
 {% endblock %}

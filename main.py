@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, make_response, flash, jsonify, url_for
-import json
+from datetime import datetime
 from werkzeug.utils import redirect
 import firebase_service as fbs
 import gcs_service as gcs_s
@@ -89,6 +89,19 @@ def username_exists(users, username):
 
 @app.route("/forum", methods=["GET", "POST"])
 def forum():
+    if request.method == 'POST':
+        if request.form['subject'] is None:
+            return render_template("forum.html", username=request.cookies.get("username"),
+                                   img_link=request.cookies.get("img_link"), err="Subject is required")
+        subject = request.form['subject']
+        msg = request.form['message']
+        msg_img = request.files['msg_img']
+        print("Post successful. Creating entry in firestore and upload img in gcs")
+        dt = datetime.now()
+        user_id = request.cookies.get("logged_in_user")
+        fbs.create_post(user_id, subject, msg, dt)
+        img_file_name = user_id + dt.isoformat()
+        gcs_s.upload(msg_img, img_file_name)
     return render_template("forum.html", username=request.cookies.get("username"),
                            img_link=request.cookies.get("img_link"))
 
