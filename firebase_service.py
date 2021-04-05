@@ -30,6 +30,23 @@ def get_all_posts():
     return [doc.to_dict() for doc in post_ref.stream()]
 
 
+def get_post(post_id):
+    post = post_ref.document(post_id).get()
+    return post.to_dict()
+
+
+def update_post(post_id, subject, message, img_link, dt):
+    post_doc = post_ref.document(post_id)
+    dt_str = dt.strftime("%d/%m/%Y %H:%M:%S")
+
+    post_doc.update({
+        'subject': subject,
+        'message': message,
+        'datetime': dt_str,
+        'img_link': img_link
+    })
+
+
 def get_all_posts_by_user(user_id):
     query = post_ref.where('user_id', '==', user_id)
     return [doc.to_dict() for doc in query.stream()]
@@ -58,7 +75,6 @@ def create_user(user_id, username, password):
 def create_post(user_id, subject, message, dt, img_link):
     # https://www.programiz.com/python-programming/datetime/current-datetime
     dt_str = dt.strftime("%d/%m/%Y %H:%M:%S")
-    print(dt_str)
     post = {
         'user_id': user_id,
         'subject': subject,
@@ -69,6 +85,6 @@ def create_post(user_id, subject, message, dt, img_link):
 
     # one user can only submit one post at a given time
     # using isoformat as firestore keys cannot contain '/' : https://firebase.google.com/docs/firestore/quotas#collections_documents_and_fields
-    post_id = user_id + dt.isoformat()
+    post_id = user_id + dt.isoformat("#", "seconds")
     print(post_id)
     post_ref.document(post_id).set(post)

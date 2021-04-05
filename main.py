@@ -119,15 +119,35 @@ def user_page():
 
 @app.route("/editpost", methods=["GET", "POST"])
 def edit_post():
+    user_id = request.cookies.get("username")
     subject = request.form['subject']
     message = request.form['message']
     img_link = request.form['img_link']
-    print(message)
+    dt_str = request.form['datetime']
+    dt_obj = datetime.strptime(dt_str, "%d/%m/%Y %H:%M:%S")
+    #iso_date = dt_obj.isoformat()
     if "route_to_forum" in request.form:
+
+        new_dt = datetime.now()
+        msg_img = request.files['msg_img']
+        if msg_img:
+            file_name = user_id + new_dt.isoformat()
+            gcs_s.upload(msg_img, file_name)
+            img_link = gcs_s.get_img_link(file_name)
+
+        # update post in firestore.
+        post_id = user_id + dt_obj.isoformat("#", "seconds")
+        print("updating post : " + post_id)
+        fbs.update_post(post_id, subject, message, img_link, datetime.now())
+        # get record
+
+        # update pic in gcs
         recent_posts = fbs.get_posts_by_date(10)
         return render_template("forum.html", username=request.cookies.get("username"),
                                img_link=request.cookies.get("img_link"), posts=recent_posts)
-    return render_template("editpost.html", subject=subject, message=message, img_link=img_link)
+
+    return render_template("editpost.html", subject=subject, message=message,
+                           img_link=img_link, datetime=dt_str)
 
 
 @app.route("/logout")

@@ -33,10 +33,14 @@
             <h5 class="card-title">{{ post['subject'] }}</h5>
             <p class="card-text">{{ post['message'] }}</p>
             <p><img src={{ post['img_link'] }} style="width:120px; height:120px"></p>
+            <p class="card-test">{{ post['datetime'] }}</p>
             <form method="POST" action="/editpost">
+
                 <input name="subject" type="hidden" value='{{ post['subject'] }}'>
                 <input name="message" type="hidden" value='{{ post['message'] }}'>
-                <input name="img_link" type="hidden" value={{ post['img_link'] }}>
+                <input name="img_link" type="hidden" value='{{ post['img_link'] }}'>
+                <input name="datetime" type="hidden" value='{{ post['datetime'] }}'>
+
                 <button type="submit" class="btn btn-primary">Edit</button>
             </form>
         </div>
