@@ -3,6 +3,7 @@ from datetime import datetime
 from werkzeug.utils import redirect
 import firebase_service as fbs
 import gcs_service as gcs_s
+
 app = Flask(__name__)
 
 
@@ -37,7 +38,7 @@ def login():
 
 def is_valid_login(user_id, password):
     users = fbs.get_all_users()
-    #user = fbs.get_user(user_id)
+    # user = fbs.get_user(user_id)
     for user in users:
         if user['id'] == user_id and user['password'] == password:
             return True
@@ -113,8 +114,27 @@ def forum():
 
 @app.route("/userpage", methods=["GET", "POST"])
 def user_page():
-    user_posts = fbs.get_all_posts_by_user(request.cookies.get("logged_in_user"))
+    user_id = request.cookies.get("logged_in_user")
+    user_posts = fbs.get_all_posts_by_user(user_id)
+
+    if request.method == 'POST':
+        old_pwd = request.form['old_password']
+        new_pwd = request.form['new_password']
+
+        if is_valid_password(old_pwd):
+            fbs.update_user_password(user_id, new_pwd)
+            resp = make_response(redirect("/login"))
+            return resp
+        else:
+            return render_template("userpage.html", posts=user_posts, err="The old password is incorrect")
+
     return render_template("userpage.html", posts=user_posts)
+
+
+def is_valid_password(pwd):
+    user_id = request.cookies.get("logged_in_user")
+    user = fbs.get_user(user_id)
+    return pwd == user['password']
 
 
 @app.route("/editpost", methods=["GET", "POST"])
@@ -125,7 +145,7 @@ def edit_post():
     img_link = request.form['img_link']
     dt_str = request.form['datetime']
     dt_obj = datetime.strptime(dt_str, "%d/%m/%Y %H:%M:%S")
-    #iso_date = dt_obj.isoformat()
+
     if "route_to_forum" in request.form:
 
         new_dt = datetime.now()

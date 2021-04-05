@@ -47,6 +47,14 @@ def update_post(post_id, subject, message, img_link, dt):
     })
 
 
+def update_user_password(user_id, pwd):
+    user_doc = user_ref.document(user_id)
+
+    user_doc.update({
+        'password': pwd
+    })
+
+
 def get_all_posts_by_user(user_id):
     query = post_ref.where('user_id', '==', user_id)
     return [doc.to_dict() for doc in query.stream()]
