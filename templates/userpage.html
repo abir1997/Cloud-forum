@@ -28,12 +28,17 @@
 <div class="container">
     {% for post in posts %}
     <div class="card">
-        <h5 class="card-header">{{ post }}</h5>
+        <h5 class="card-header">{{ post[user_id] }}</h5>
         <div class="card-body">
             <h5 class="card-title">{{ post['subject'] }}</h5>
             <p class="card-text">{{ post['message'] }}</p>
             <p><img src={{ post['img_link'] }} style="width:120px; height:120px"></p>
-            <button type="button" class="btn btn-primary">Edit</button>
+            <form method="POST" action="/editpost">
+                <input name="subject" type="hidden" value='{{ post['subject'] }}'>
+                <input name="message" type="hidden" value='{{ post['message'] }}'>
+                <input name="img_link" type="hidden" value={{ post['img_link'] }}>
+                <button type="submit" class="btn btn-primary">Edit</button>
+            </form>
         </div>
     </div>
     {% endfor %}

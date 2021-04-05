@@ -117,6 +117,19 @@ def user_page():
     return render_template("userpage.html", posts=user_posts)
 
 
+@app.route("/editpost", methods=["GET", "POST"])
+def edit_post():
+    subject = request.form['subject']
+    message = request.form['message']
+    img_link = request.form['img_link']
+    print(message)
+    if "route_to_forum" in request.form:
+        recent_posts = fbs.get_posts_by_date(10)
+        return render_template("forum.html", username=request.cookies.get("username"),
+                               img_link=request.cookies.get("img_link"), posts=recent_posts)
+    return render_template("editpost.html", subject=subject, message=message, img_link=img_link)
+
+
 @app.route("/logout")
 def logout():
     resp = make_response(redirect("/login"))
