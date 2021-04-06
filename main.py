@@ -141,7 +141,7 @@ def is_valid_password(pwd):
 
 @app.route("/editpost", methods=["GET", "POST"])
 def edit_post():
-    user_id = request.cookies.get("username")
+    user_id = request.cookies.get("logged_in_user")
     subject = request.form['subject']
     message = request.form['message']
     img_link = request.form['img_link']
