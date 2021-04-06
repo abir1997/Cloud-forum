@@ -6,10 +6,7 @@ https://stackoverflow.com/questions/37003862/how-to-upload-a-file-to-google-clou
 """
 
 from google.cloud import storage
-from oauth2client.service_account import ServiceAccountCredentials
 
-
-#credentials = ServiceAccountCredentials.from_json_keyfile_name('service-key.json')
 bucket_name = "flaskforum_bucket"
 client = storage.Client.from_service_account_json("service-key.json")
 bucket = client.get_bucket(bucket_name)
