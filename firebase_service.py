@@ -83,11 +83,14 @@ def create_user(user_id, username, password):
 def create_post(user_id, subject, message, dt, img_link):
     # https://www.programiz.com/python-programming/datetime/current-datetime
     dt_str = dt.strftime("%d/%m/%Y %H:%M:%S")
+    user = get_user(user_id)
+    username = user['user_name']
     post = {
         'user_id': user_id,
         'subject': subject,
         'message': message,
         'datetime': dt_str,
+        'user_name': username,
         'img_link': img_link
     }
 

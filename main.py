@@ -52,6 +52,7 @@ def register():
         user_id = request.form['userId']
         pwd = request.form['password']
         username = request.form['userName']
+
         users = fbs.get_all_users()
         if id_exists(users, user_id):
             error = "The ID already exists."
@@ -63,6 +64,7 @@ def register():
             if request.files['img']:
                 file = request.files['img']
                 gcs_s.upload(file, user_id)
+            return make_response(redirect("/login"))
 
     return render_template('register.html', message=error)
 
@@ -159,9 +161,7 @@ def edit_post():
         post_id = user_id + dt_obj.isoformat("#", "seconds")
         print("updating post : " + post_id)
         fbs.update_post(post_id, subject, message, img_link, datetime.now())
-        # get record
 
-        # update pic in gcs
         recent_posts = fbs.get_posts_by_date(10)
         return render_template("forum.html", username=request.cookies.get("username"),
                                img_link=request.cookies.get("img_link"), posts=recent_posts)

@@ -1,32 +1,40 @@
 <!-- docs : https://overiq.com/flask-101/form-handling-in-flask/ -->
 {% extends "layout.html" %}
 {% block content %}
-<form method="POST">
-  <h3 align="center">Login</h3>
-  <div class="form-group">
-    <label>ID</label>
-    <input
-            type="text"
-            class="form-control"
-            id="userId"
-            name="userId"
-            placeholder="Enter user Id"
-    />
+<div class="container">
+  <form method="POST">
+    <h3 align="center">Login</h3>
+    <div class="form-group">
+      <label>ID</label>
+      <input
+              type="text"
+              class="form-control"
+              id="userId"
+              name="userId"
+              placeholder="Enter user Id"
+      />
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Enter password"
+      />
+    </div>
+    <br />
+    <button type="submit" value="Login" class="btn btn-primary">Login</button>
+  </form>
+  {% if message %}
+  <p>{{ message }}</p>
+  {% endif %}
+  <br>
+  <div class="card">
+    <div class="card-body">
+      Don't have an account ? Please <a href="{{ url_for('register') }}">register</a> first.
+    </div>
   </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input
-            type="password"
-            class="form-control"
-            id="password"
-            name="password"
-            placeholder="Enter password"
-    />
-  </div>
-  <br />
-  <button type="submit" value="Login" class="btn btn-primary">Login</button>
-</form>
-{% if message %}
-<p>{{ message }}</p>
-{% endif %}
+</div>
 {% endblock %}
