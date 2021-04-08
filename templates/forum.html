@@ -12,7 +12,7 @@
     <h3>Message posting</h3>
     <form method="POST" enctype="multipart/form-data">
         <div class="form-group">
-            <input class="form-control" type="text" id="subject" name="subject" placeholder="Subject">
+            <input class="form-control" type="text" id="subject" name="subject" placeholder="Subject" required>
         </div>
         <div class="form-group">
             <label for="message">Enter message</label>
@@ -35,14 +35,17 @@
     <h3>See Messages</h3>
     {% for post in posts %}
     <div class="card">
-        <h5 class="card-header">{{ post['user_name'] }}</h5>
+        <h5 class="card-header">User : {{ post['user_name'] }}</h5>
         <div class="card-body">
-            <h5 class="card-title">{{ post['subject'] }}</h5>
-            <p class="card-text">{{ post['message'] }}</p>
-            <img src={{ post['img_link'] }} style="width:120px; height:120px">
+            <h5 class="card-title">Subject : {{ post['subject'] }}</h5>
+            <p>User image : <img src={{ post['user_img_link'] }} style="width:120px; height:120px"</p>
+            <p class="card-text">Message : {{ post['message'] }}</p>
+            <p>Post image : <img src={{ post['img_link'] }} style="width:120px; height:120px"></p>
             <p class="card-test">{{ post['datetime'] }}</p>
         </div>
     </div>
     {% endfor %}
+    <br>
 </div>
+<br>
 {% endblock %}

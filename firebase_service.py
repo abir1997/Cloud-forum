@@ -79,7 +79,7 @@ def create_user(user_id, username, password):
     user_ref.document(user_id).set(user)
 
 
-def create_post(user_id, subject, message, dt, img_link):
+def create_post(user_id, subject, message, dt, post_img_link, user_img_link):
     # https://www.programiz.com/python-programming/datetime/current-datetime
     dt_str = dt.strftime("%d/%m/%Y %H:%M:%S")
     user = get_user(user_id)
@@ -90,7 +90,8 @@ def create_post(user_id, subject, message, dt, img_link):
         'message': message,
         'datetime': dt_str,
         'user_name': username,
-        'img_link': img_link
+        'img_link': post_img_link,
+        'user_img_link': user_img_link
     }
 
     # one user can only submit one post at a given time

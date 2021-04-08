@@ -102,12 +102,13 @@ def forum():
         dt = datetime.now()
         user_id = request.cookies.get("logged_in_user")
         img_link = ""
+        user_img_link = gcs_s.get_img_link(user_id)
         if msg_img:
             img_file_name = user_id + dt.isoformat()
             gcs_s.upload(msg_img, img_file_name)
             img_link = gcs_s.get_img_link(img_file_name)
 
-        fbs.create_post(user_id, subject, msg, dt, img_link)
+        fbs.create_post(user_id, subject, msg, dt, img_link, user_img_link)
 
     recent_posts = fbs.get_posts_by_date(10)
     return render_template("forum.html", username=request.cookies.get("username"),
