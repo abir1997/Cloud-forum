@@ -41,6 +41,7 @@
             <p class="card-test">{{ post['datetime'] }}</p>
             <form method="POST" action="/editpost">
 
+                <input name="post_id" type="hidden" value='{{ post['post_id'] }}'>
                 <input name="subject" type="hidden" value='{{ post['subject'] }}'>
                 <input name="message" type="hidden" value='{{ post['message'] }}'>
                 <input name="img_link" type="hidden" value='{{ post['img_link'] }}'>

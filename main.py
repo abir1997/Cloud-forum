@@ -147,6 +147,7 @@ def edit_post():
     message = request.form['message']
     img_link = request.form['img_link']
     dt_str = request.form['datetime']
+    post_id = request.form['post_id']
     dt_obj = datetime.strptime(dt_str, "%d/%m/%Y %H:%M:%S")
 
     if "route_to_forum" in request.form:
@@ -159,16 +160,15 @@ def edit_post():
             img_link = gcs_s.get_img_link(file_name)
 
         # update post in firestore.
-        post_id = user_id + dt_obj.isoformat("#", "seconds")
         print("updating post : " + post_id)
-        fbs.update_post(post_id, subject, message, img_link, datetime.now())
+        fbs.update_post(post_id, subject, message, img_link, new_dt)
 
         recent_posts = fbs.get_posts_by_date(10)
         return render_template("forum.html", username=request.cookies.get("username"),
                                img_link=request.cookies.get("img_link"), posts=recent_posts)
 
     return render_template("editpost.html", subject=subject, message=message,
-                           img_link=img_link, datetime=dt_str)
+                           img_link=img_link, datetime=dt_str, post_id=post_id)
 
 
 @app.route("/logout")
