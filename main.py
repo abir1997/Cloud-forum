@@ -87,7 +87,7 @@ def id_exists(users, user_id):
 def username_exists(users, username):
     for user in users:
         if user['user_name'] == username:
-            return False
+            return True
 
 
 @app.route("/forum", methods=["GET", "POST"])
